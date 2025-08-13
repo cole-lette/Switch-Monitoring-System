@@ -6,8 +6,8 @@ You should have installed Node.js in your workstation first and setup your own M
 
 ### To run the backend application:  
 1. Open a new terminal
-2. ```git clone https://github.com/donskytech/rfid-security-app.git```  
-3. ```cd rfid-security-app```  
+2. ```git clone https://github.com/cole-lette/Switch-Monitoring-System```  
+3. ```cd Switch-Monitoring System```  
 4. ```cd backend```  
 5. Create a .env file and enter your MongoDB Atlas connection string.  
 Format is the following: ```MONGO_DB_URL=mongodb+srv://<username>:<password>@<server>/rfiddb?retryWrites=true&w=majority```
