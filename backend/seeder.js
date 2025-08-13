@@ -1,7 +1,7 @@
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
-const Student = require("./model/Student");
-const students = require("./data/MOCK_DATA.json");
+const Device = require("./model/Device");
+const devices = require("./data/MOCK_DATA.json");
 
 //load the .env file
 dotenv.config();
@@ -11,8 +11,8 @@ mongoose.connect(process.env.MONGO_DB_URL);
 
 const importData = async () => {
   try {
-    await Student.deleteMany();
-    await Student.insertMany(students);
+    await Device.deleteMany();
+    await Device.insertMany(devices);
   } catch (error) {
     console.log(error);
     process.exit(1);
@@ -21,7 +21,7 @@ const importData = async () => {
 
 const clearData = async () => {
   try {
-    await Student.deleteMany();
+    await Device.deleteMany();
   } catch (error) {
     console.log(error);
     process.exit(1);

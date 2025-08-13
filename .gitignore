@@ -1,0 +1,8 @@
+# .gitignore for a web app
+node_modules/
+# Environment variables
+backend/.env
+dist/
+build/
+.DS_Store
+

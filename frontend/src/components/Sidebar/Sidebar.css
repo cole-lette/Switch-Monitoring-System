@@ -1,0 +1,201 @@
+/* Sidebar.css */
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  border-right-width: 1px;
+  transition-property: background-color, border-color, width;
+  transition-duration: 300ms;
+  background-color: #f9fafb; /* bg-gray-50 */
+  border-color: #e5e7eb; /* border-gray-200 */
+  color: #374151; /* text-gray-700 fallback */
+   z-index: 50;
+   box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+.dark .sidebar {
+  background-color: #111827; /* dark:bg-gray-900 */
+  border-color: #374151; /* dark:border-gray-700 */
+  color: #d1d5db; /* dark:text-gray-300 fallback */
+}
+
+.sidebar-collapsed {
+  width: 60px !important; /* override inline style if needed */
+}
+
+.sidebar-expanded {
+  width: 220px !important;
+}
+
+.sidebar > .logo-hamburger {
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.sidebar-collapsed > .logo-hamburger {
+  justify-content: center;
+  padding-top: 1rem; /* py-4 */
+  padding-bottom: 1rem;
+}
+
+.sidebar-expanded > .logo-hamburger {
+  justify-content: space-between;
+  padding-left: 1rem; /* px-4 */
+  padding-right: 1rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.logo-hamburger img {
+  width: 8rem; /* w-32 */
+  transition: all 0.3s ease;
+}
+
+.hamburger-btn {
+  padding: 0.5rem; /* p-2 */
+  border-radius: 0.375rem; /* rounded-md */
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.hamburger-btn:hover {
+  background-color: #e5e7eb; /* hover:bg-gray-200 */
+}
+
+.dark .hamburger-btn:hover {
+  background-color: #374151; /* dark:hover:bg-gray-700 */
+}
+
+.hamburger-btn.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.menu-items {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  margin-top: 0.5rem; /* mt-2 */
+  gap: 0.75rem; /* space-y-3 */
+}
+
+.menu-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+  padding-top: 0.5rem; /* py-2 */
+  padding-bottom: 0.5rem;
+  font-weight: 600; /* font-semibold */
+  border-radius: 0.375rem; /* rounded-md */
+  cursor: pointer;
+  color: #374151; /* text-gray-700 */
+  outline: none;
+}
+
+.menu-item:hover,
+.menu-item:focus-visible {
+  background-color: #e0e7ff; /* hover:bg-indigo-100 */
+  color: #4338ca; /* hover:text-indigo-700 */
+  outline: none;
+  box-shadow: 0 0 0 2px #4338ca; /* focus:ring-indigo-500 */
+}
+
+.dark .menu-item {
+  color: #d1d5db; /* dark:text-gray-300 */
+}
+
+.dark .menu-item:hover,
+.dark .menu-item:focus-visible {
+  background-color: #4338ca; /* dark:hover:bg-indigo-700 */
+  color: #c7d2fe; /* dark:hover:text-indigo-200 */
+  box-shadow: 0 0 0 2px #a5b4fc; /* dark focus ring */
+}
+
+.menu-item.collapsed {
+  justify-content: center;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.menu-item.expanded {
+  justify-content: flex-start;
+  padding-left: 1rem; /* px-4 */
+  gap: 1rem; /* gap-4 */
+}
+
+.menu-icon {
+  color: #4338ca; /* text-indigo-600 */
+}
+
+.dark .menu-icon {
+  color: #818cf8; /* dark:text-indigo-400 */
+}
+
+/* Tooltip */
+.menu-item .tooltip {
+  position: absolute;
+  z-index: 50;
+  padding: 0.25rem 0.5rem; /* px-2 py-1 */
+  margin-left: 0.5rem; /* ml-2 */
+  font-size: 0.875rem; /* text-sm */
+  color: white;
+  background-color: #374151; /* bg-gray-700 */
+  border-radius: 0.375rem; /* rounded-md */
+  opacity: 0;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.menu-item:hover .tooltip,
+.menu-item:focus-visible .tooltip {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.menu-item.active {
+  background-color: #4338ca; /* indigo-700 */
+  color: white;
+  font-weight: 700;
+  box-shadow: 0 0 0 2px #a5b4fc; /* subtle focus ring */
+}
+
+.menu-item.active .menu-icon {
+  color: white;
+}
+
+.dark .menu-item.active {
+  background-color: #6366f1; /* lighter indigo for dark mode */
+  color: white;
+  box-shadow: 0 0 0 2px #a5b4fc;
+}
+
+.dark .menu-item.active .menu-icon {
+  color: white;
+}
+
+
+/* Theme toggle container */
+.theme-toggle-container {
+  margin-top: auto;
+  padding-left: 1rem; /* px-4 */
+  padding-right: 1rem;
+  padding-top: 0.5rem; /* py-2 */
+  padding-bottom: 0.5rem;
+}
+
+.theme-toggle-container.collapsed {
+  display: flex;
+  justify-content: center;
+  padding-left: 0;
+  padding-right: 0;
+}
