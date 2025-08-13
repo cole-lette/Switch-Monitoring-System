@@ -4,15 +4,14 @@ import Palette from "./components/Palette";
 import MiniMap from "./components/MiniMap";
 import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import DraggableNode from './components/DraggableNode';
+import DraggableNode from "./components/DraggableNode";
 import SettingsModal from "./components/SettingsModal";
-import Arrows from "./components/Arrows"
+import Arrows from "./components/Arrows";
 import UndoRedoControls from "./components/UndoRedoControls";
 import ZoomControls from "./components/ZoomControls";
 import CanvasControls from "./components/CanvasControls";
 import { toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
-
 
 export default function SwitchControl() {
   const { t } = useTranslation();
@@ -54,7 +53,6 @@ export default function SwitchControl() {
 
   const [showDetails, setShowDetails] = useState(false);
 
-
   const onCanvasUpdated = () => {
     fetch("http://localhost:5000/api/canvas/list", {
       headers: {
@@ -76,7 +74,6 @@ export default function SwitchControl() {
       return null;
     }
   };
-
 
   const handleReportAnchors = (nodeId, anchors) => {
     setAnchorPositions((prev) => ({ ...prev, [nodeId]: anchors }));
@@ -108,12 +105,11 @@ export default function SwitchControl() {
       } else if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "z") {
         e.preventDefault();
         handleRedo();
-      } else if ((e.key === "Delete") && selectedNode) {
+      } else if (e.key === "Delete" && selectedNode) {
         e.preventDefault();
         handleDelete(selectedNode);
         setSelectedNode(null);
-      }
-      else if (e.ctrlKey && e.key.toLowerCase() === "s") {
+      } else if (e.ctrlKey && e.key.toLowerCase() === "s") {
         e.preventDefault();
         // You may want to call a save function here
         document.querySelector("[data-canvas-save='true']")?.click();
@@ -139,7 +135,6 @@ export default function SwitchControl() {
       window.removeEventListener("wheel", wheelHandler);
     };
   }, [history, future, scale, selectedNode]);
-
 
   const saveHistory = () => {
     setHistory((prev) => [
@@ -203,7 +198,9 @@ export default function SwitchControl() {
       delete updated[id];
       return updated;
     });
-    setConnections((prev) => prev.filter(c => c.fromNodeId !== id && c.toNodeId !== id));
+    setConnections((prev) =>
+      prev.filter((c) => c.fromNodeId !== id && c.toNodeId !== id)
+    );
   };
 
   const handleDrop = async (e) => {
@@ -251,12 +248,19 @@ export default function SwitchControl() {
 
     // Existing canvas: save automatically with existing canvas name
     try {
-      await saveCanvas(selectedCanvasId, currentCanvasName, updatedNodes, updatedPositions, connections, scale, translate);
+      await saveCanvas(
+        selectedCanvasId,
+        currentCanvasName,
+        updatedNodes,
+        updatedPositions,
+        connections,
+        scale,
+        translate
+      );
     } catch (err) {
       console.error(err);
     }
   };
-
 
   const saveCanvas = async (
     canvasIdToUse,
@@ -308,7 +312,6 @@ export default function SwitchControl() {
     }
   };
 
-
   const handleDragOver = (e) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = "move";
@@ -346,7 +349,9 @@ export default function SwitchControl() {
       const toX = (e.clientX - canvasRect.left - translate.x) / scale;
       const toY = (e.clientY - canvasRect.top - translate.y) / scale;
 
-      setConnectionInProgress((prev) => prev ? { ...prev, toPos: { x: toX, y: toY } } : null);
+      setConnectionInProgress((prev) =>
+        prev ? { ...prev, toPos: { x: toX, y: toY } } : null
+      );
     }
   };
 
@@ -366,6 +371,7 @@ export default function SwitchControl() {
     setTranslate({ x, y });
   };
 
+  // Toggle show details
   const handleOpenSettings = (nodeId) => {
     console.log("handleOpenSettings called with", nodeId);
     const node = nodes.find((n) => n.id === nodeId);
@@ -373,7 +379,6 @@ export default function SwitchControl() {
     setSelectedDevice(node);
     setSettingsVisible(true);
   };
-
 
   const handleCloseSettings = () => {
     setSelectedDevice(null);
@@ -388,13 +393,29 @@ export default function SwitchControl() {
       fromNodeId,
       fromAnchor,
       fromPos: {
-        x: (fromPos.x - canvasRef.current.getBoundingClientRect().left - translate.x) / scale,
-        y: (fromPos.y - canvasRef.current.getBoundingClientRect().top - translate.y) / scale,
+        x:
+          (fromPos.x -
+            canvasRef.current.getBoundingClientRect().left -
+            translate.x) /
+          scale,
+        y:
+          (fromPos.y -
+            canvasRef.current.getBoundingClientRect().top -
+            translate.y) /
+          scale,
       },
       toPos: {
-        x: (fromPos.x - canvasRef.current.getBoundingClientRect().left - translate.x) / scale,
-        y: (fromPos.y - canvasRef.current.getBoundingClientRect().top - translate.y) / scale,
-      }
+        x:
+          (fromPos.x -
+            canvasRef.current.getBoundingClientRect().left -
+            translate.x) /
+          scale,
+        y:
+          (fromPos.y -
+            canvasRef.current.getBoundingClientRect().top -
+            translate.y) /
+          scale,
+      },
     });
   };
 
@@ -406,7 +427,10 @@ export default function SwitchControl() {
     if (
       toNodeId &&
       toAnchor &&
-      !(connectionInProgress.fromNodeId === toNodeId && connectionInProgress.fromAnchor === toAnchor)
+      !(
+        connectionInProgress.fromNodeId === toNodeId &&
+        connectionInProgress.fromAnchor === toAnchor
+      )
     ) {
       const exists = connections.some(
         (conn) =>
@@ -468,32 +492,55 @@ export default function SwitchControl() {
   };
 
   // Helper to create SVG path for a curved connection line between two points
-  function createConnectionPath(start, end, fromAnchor, toAnchor, lineType = "bezier") {
+  function createConnectionPath(
+    start,
+    end,
+    fromAnchor,
+    toAnchor,
+    lineType = "bezier"
+  ) {
     if (lineType === "bezier") {
       const dx = end.x - start.x;
       const dy = end.y - start.y;
       const dist = Math.sqrt(dx * dx + dy * dy);
       const offset = Math.min(Math.max(dist * 0.3, 20), 40);
 
-      let c1x = start.x, c1y = start.y, c2x = end.x, c2y = end.y;
+      let c1x = start.x,
+        c1y = start.y,
+        c2x = end.x,
+        c2y = end.y;
 
       switch (fromAnchor) {
-        case "top": c1y -= offset; break;
-        case "bottom": c1y += offset; break;
-        case "left": c1x -= offset; break;
-        case "right": c1x += offset; break;
+        case "top":
+          c1y -= offset;
+          break;
+        case "bottom":
+          c1y += offset;
+          break;
+        case "left":
+          c1x -= offset;
+          break;
+        case "right":
+          c1x += offset;
+          break;
       }
       switch (toAnchor) {
-        case "top": c2y -= offset; break;
-        case "bottom": c2y += offset; break;
-        case "left": c2x -= offset; break;
-        case "right": c2x += offset; break;
+        case "top":
+          c2y -= offset;
+          break;
+        case "bottom":
+          c2y += offset;
+          break;
+        case "left":
+          c2x -= offset;
+          break;
+        case "right":
+          c2x += offset;
+          break;
       }
 
       return `M${start.x},${start.y} C${c1x},${c1y} ${c2x},${c2y} ${end.x},${end.y}`;
-    }
-    else if (lineType === "orthogonal") {
-
+    } else if (lineType === "orthogonal") {
       let midX, midY;
 
       const horizontalAnchors = ["left", "right"];
@@ -517,29 +564,31 @@ export default function SwitchControl() {
     return `M${start.x},${start.y} L${end.x},${end.y}`;
   }
 
-
   // Devices for palette
-  const yourPlacedDevicesArray = nodes.map(({ address, brokerUrl, id, part_number, hw_version, sw_version }) => ({
-    address,
-    brokerUrl,
-    id,
-    part_number,
-    hw_version,
-    sw_version,
-  }));
-
-
+  const yourPlacedDevicesArray = nodes.map(
+    ({ address, brokerUrl, id, part_number, hw_version, sw_version }) => ({
+      address,
+      brokerUrl,
+      id,
+      part_number,
+      hw_version,
+      sw_version,
+    })
+  );
 
   const handleSaveSettings = async (updatedNode) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/canvas/nodes/${selectedDevice.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-        },
-        body: JSON.stringify(updatedNode), // send all updated fields here
-      });
+      const response = await fetch(
+        `http://localhost:5000/api/canvas/nodes/${selectedDevice.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          },
+          body: JSON.stringify(updatedNode), // send all updated fields here
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to save node settings");
@@ -566,8 +615,6 @@ export default function SwitchControl() {
     nodesRef.current = nodes;
   }, [nodes]);
 
-
-
   const handleToggleSwitch = async (nodeId, newIsOn) => {
     const token = localStorage.getItem("authToken");
     const email = getEmailFromToken();
@@ -581,14 +628,17 @@ export default function SwitchControl() {
       );
 
       // Send update to backend
-      const response = await fetch(`http://localhost:5000/api/canvas/nodes/${nodeId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ isOn: newIsOn }),
-      });
+      const response = await fetch(
+        `http://localhost:5000/api/canvas/nodes/${nodeId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ isOn: newIsOn }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`Failed to update node ${nodeId}`);
@@ -613,7 +663,6 @@ export default function SwitchControl() {
           }),
         });
       }
-
     } catch (error) {
       console.error(error);
       alert("Failed to save toggle state. Please try again.");
@@ -626,7 +675,6 @@ export default function SwitchControl() {
       );
     }
   };
-
 
   useEffect(() => {
     if (!selectedCanvasId) return;
@@ -684,36 +732,40 @@ export default function SwitchControl() {
       const newLockStatus = !currentLockStatus;
 
       // update local state immediately (for instant feedback)
-      setNodes(prev =>
-        prev.map(n =>
-          n.id === nodeId ? { ...n, locked: newLockStatus } : n
-        )
+      setNodes((prev) =>
+        prev.map((n) => (n.id === nodeId ? { ...n, locked: newLockStatus } : n))
       );
 
       // send to backend
-      await fetch(`http://localhost:5000/api/canvas/${selectedCanvasId}/nodes/${nodeId}/lock`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-        },
-        body: JSON.stringify({ locked: newLockStatus }),
-      });
+      await fetch(
+        `http://localhost:5000/api/canvas/${selectedCanvasId}/nodes/${nodeId}/lock`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          },
+          body: JSON.stringify({ locked: newLockStatus }),
+        }
+      );
     } catch (err) {
       console.error("Failed to update lock status", err);
       toast.error("Failed to update lock status.");
     }
   };
 
-
-
   return (
     <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900">
-      <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} activePath={location.pathname} />
+      <Sidebar
+        collapsed={collapsed}
+        setCollapsed={setCollapsed}
+        activePath={location.pathname}
+      />
 
       <main
-        className={`flex-1 transition-[margin-left] duration-300 ease-in-out text-gray-800 dark:text-gray-200 ${collapsed ? "ml-[60px]" : "ml-[220px]"
-          }`}
+        className={`flex-1 transition-[margin-left] duration-300 ease-in-out text-gray-800 dark:text-gray-200 ${
+          collapsed ? "ml-[60px]" : "ml-[220px]"
+        }`}
         style={{ height: "100vh", overflow: "hidden" }}
       >
         <div className="flex flex-col h-full p-6 space-y-6">
@@ -748,9 +800,12 @@ export default function SwitchControl() {
                 canRedo={future.length > 0}
                 t={t}
               />
-              <ZoomControls onZoomIn={handleZoomIn} onZoomOut={handleZoomOut} t={t} />
+              <ZoomControls
+                onZoomIn={handleZoomIn}
+                onZoomOut={handleZoomOut}
+                t={t}
+              />
             </div>
-
           </div>
 
           {/* Content Row */}
@@ -761,9 +816,19 @@ export default function SwitchControl() {
               style={{ width: 220, minHeight: 0, height: "100%" }}
             >
               <div
-                style={{ flexGrow: 1, width: "100%", overflowY: "auto", minHeight: 0, overflow: 'hidden' }}
+                style={{
+                  flexGrow: 1,
+                  width: "100%",
+                  overflowY: "auto",
+                  minHeight: 0,
+                  overflow: "hidden",
+                }}
               >
-                <Palette placedDevices={yourPlacedDevicesArray} onDragStart={handleDragStart} t={t} />
+                <Palette
+                  placedDevices={yourPlacedDevicesArray}
+                  onDragStart={handleDragStart}
+                  t={t}
+                />
               </div>
               <div style={{ height: 120, flexShrink: 0, width: "100%" }}>
                 <MiniMap
@@ -835,7 +900,9 @@ export default function SwitchControl() {
                     selectedNodeId={selectedNode}
                     onConnectionMove={(x, y) => {
                       setConnectionInProgress((prev) =>
-                        prev ? { ...prev, toPos: { x: x / scale, y: y / scale } } : null
+                        prev
+                          ? { ...prev, toPos: { x: x / scale, y: y / scale } }
+                          : null
                       );
                     }}
                     onConnectionEnd={onConnectionEnd}
@@ -858,9 +925,7 @@ export default function SwitchControl() {
             t={t}
           />
         )}
-
       </main>
     </div>
   );
-
 }

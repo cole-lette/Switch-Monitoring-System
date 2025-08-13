@@ -1,7 +1,7 @@
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const Device = require("./model/Device");
-const devices = require("./data/MOCK_DATA.json");
+// const devices = require("./data/MOCK_DATA.json");
 
 //load the .env file
 dotenv.config();

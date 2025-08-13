@@ -1,20 +1,21 @@
 const jwt = require("jsonwebtoken");
 
-const JWT_SECRET = process.env.JWT_SECRET || "f373bbea06dace245c7c364e7fa77403ad3794e08cf042154dd33313a6caf63fca5ab27c0daa32e071af259f3f482a0e3280ea5be8f7f8c0a2bc05cd5519cd0b";
-
+const JWT_SECRET =
+  process.env.JWT_SECRET ||
+  "f5836cd1fe850de341f48f635d115daed1d89f5982a449dcb01bff686e9ffd0d0e79c2bf4d6a1ac923d6c108fbd7660e65e4a2281c081b688ab2179eb150fda7";
 const authenticateJWT = (req, res, next) => {
   const authHeader = req.headers.authorization;
-  //console.log("Auth header:", authHeader);
+  console.log("Auth header:", authHeader);
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     console.log("No token or wrong header");
     return res.status(401).json({ error: "Unauthorized: No token provided" });
   }
   const token = authHeader.split(" ")[1];
-  //console.log("Token received:", token);
+  console.log("Token received:", token);
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    //console.log("Decoded JWT:", decoded);
+    console.log("Decoded JWT:", decoded);
     req.user = decoded;
     next();
   } catch (err) {
@@ -22,6 +23,5 @@ const authenticateJWT = (req, res, next) => {
     return res.status(401).json({ error: "Unauthorized: Invalid token" });
   }
 };
-
 
 module.exports = authenticateJWT;
